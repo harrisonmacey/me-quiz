@@ -3,7 +3,7 @@
 
 
 import React, { useState } from 'react';
-import Timer from './Timer';
+import Timer from './quiz/Timer';
 
 
 const ResultPage = () => {
