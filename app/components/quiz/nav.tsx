@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Timer from "./Timer";
 
 export default function QuizNav() {
   return (
@@ -9,6 +10,7 @@ export default function QuizNav() {
             Back to Home
           </span>
         </Link>
+        <Timer></Timer>
       </div>
     </nav>
   );
