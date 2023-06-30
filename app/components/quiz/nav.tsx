@@ -10,7 +10,6 @@ export default function QuizNav() {
             Back to Home
           </span>
         </Link>
-        <Timer></Timer>
       </div>
     </nav>
   );

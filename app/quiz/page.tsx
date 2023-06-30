@@ -1,4 +1,5 @@
-import Question from '../components/quiz/Question';
+import Question from '../components/quiz/Question'
+import Timer from "../components/quiz/Timer";
 
 export default function QuizPage() {
   return (
@@ -8,10 +9,10 @@ export default function QuizPage() {
         {/* <p className="text-lg">
           Welcome to the quiz! This is where the quiz questions will go.
         </p> */}
-        <Question
-        question="What is the capital of France?"
-        options={['Paris', 'London', 'Berlin', 'Madrid']}
-      />
+        <span className="text-base font-semibold whitespace-nowrap dark:text-white" style={{ display: 'flex', justifyContent: 'center', marginRight: '600px' }}>
+            <Timer/>
+          </span>
+          <Question/>
       </div>
     </main>
   );
