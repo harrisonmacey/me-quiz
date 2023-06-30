@@ -4,20 +4,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRouter } from 'next/navigation';
-import Index from './Index';
+// import Index from '.';
 
-let rawScore = 0;
 let userAnswers: number[] = [];
 
-
-const Quiz: React.FC = () => {
-
-  
-
-  const [score, setScore] = useState(0);
-  const router = useRouter();
-  const { push } = useRouter();
-
+type QuestionProps = {
+  score: number,
+  setScore: (score: number) => void,
+  setFinished: (finished: boolean) => void
+}
+const Question = ({score, setScore, setFinished}: QuestionProps) => {
   const questions = [
     {
       question: 'Question 1',
@@ -44,49 +40,38 @@ const Quiz: React.FC = () => {
         answers: ['Correct', 'Answer 18', 'Answer 19', 'Answer 20'],
         correctAnswer: 0,
       },
-    
-    
+
+
   ];
 
-  
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  const numberOfQuestions = questions.length
+
   const handleAnswerClick = (selectedAnswerIndex: number) => {
-   
+    // Store their answer
     userAnswers.push(selectedAnswerIndex);
-    
-    if (currentQuestionIndex != 4) {
-        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-        
-    } else{
-        //console.log("userAnswers: " + userAnswers);
-        const calculatedScore = calculateScore();
-        setScore(calculateScore());
-        console.log("SCORE: " + calculatedScore);
-        push('/result');
-        userAnswers = [];
+
+    // Set their score
+    if (selectedAnswerIndex === questions[currentQuestionIndex].correctAnswer) {
+      const newScore = score + 1;
+      setScore(newScore);
     }
-    
+
+    // Check if they are done
+    if (currentQuestionIndex < numberOfQuestions - 1) {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    } else{
+      userAnswers = [];
+      setFinished(true);
+    }
   };
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  const calculateScore = () => {
-    let score = 0;
-  
-    // Loop through each question
-    questions.forEach((question, index) => {
-      // Check if the user's answer matches the correct answer
-      if (userAnswers[index] === questions[index].correctAnswer) {
-        score++;
-      }
-    });
-    return score;
-  };
-  
   return (
     <div>
-        <Index index={currentQuestionIndex} />
+        <span>Question {currentQuestionIndex + 1} of {numberOfQuestions}</span>
         <h2>{currentQuestion.question}</h2>
         {currentQuestion.answers.map((answer, index) => (
         <div key={index} onClick={() => handleAnswerClick(index)}>
@@ -94,10 +79,10 @@ const Quiz: React.FC = () => {
         </div>
       ))}
     </div>
-    
+
   );
 };
 
 
 
-export default Quiz;
+export default Question;

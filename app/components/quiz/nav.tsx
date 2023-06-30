@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Timer from "./Timer";
 
 export default function QuizNav() {
   return (
