@@ -11,9 +11,11 @@ let userAnswers: number[] = [];
 type QuestionProps = {
   score: number,
   setScore: (score: number) => void,
-  setFinished: (finished: boolean) => void
+  setFinished: (finished: boolean) => void,
+  time: number,
+  setFinalTime: (finalTime: number) => void
 }
-const Question = ({score, setScore, setFinished}: QuestionProps) => {
+const Question = ({score, setScore, setFinished, time, setFinalTime}: QuestionProps) => {
   const questions = [
     {
       question: 'Question 1',
@@ -64,6 +66,8 @@ const Question = ({score, setScore, setFinished}: QuestionProps) => {
     } else{
       userAnswers = [];
       setFinished(true);
+      console.log("your final time: " + time);
+      setFinalTime(time);
     }
   };
 
