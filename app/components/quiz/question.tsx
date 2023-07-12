@@ -1,10 +1,6 @@
-//store state for index and questionText
 "use client";
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRouter } from "next/navigation";
-// import Index from '.';
 
 let userAnswers: number[] = [];
 
@@ -12,39 +8,32 @@ type QuestionProps = {
   score: number;
   setScore: (score: number) => void;
   setFinished: (finished: boolean) => void;
-  time: number;
-  setFinalTime: (finalTime: number) => void;
 };
-const Question = ({
-  score,
-  setScore,
-  setFinished,
-  time,
-  setFinalTime,
-}: QuestionProps) => {
+const Question = ({ score, setScore, setFinished }: QuestionProps) => {
   const questions = [
     {
-      question: "Question 1",
+      question: "How many days are in a week?",
       answers: ["Correct", "Answer 2", "Answer 3", "Answer 4"],
       correctAnswer: 0,
     },
     {
-      question: "Question 2",
+      question: "Who is the current president of the United States?",
       answers: ["Correct", "Answer 6", "Answer 7", "Answer 8"],
       correctAnswer: 0,
     },
     {
-      question: "Question 3",
+      question: "What is the capital of the United States?",
       answers: ["Correct", "Answer 10", "Answer 11", "Answer 12"],
       correctAnswer: 0,
     },
     {
-      question: "Question 4",
+      question:
+        "JavaScript is a programming language. How many days are in a week?",
       answers: ["Correct", "Answer 14", "Answer 15", "Answer 16"],
       correctAnswer: 0,
     },
     {
-      question: "Question 5",
+      question: "Who established the theory of relativity?",
       answers: ["Correct", "Answer 18", "Answer 19", "Answer 20"],
       correctAnswer: 0,
     },
@@ -70,24 +59,30 @@ const Question = ({
     } else {
       userAnswers = [];
       setFinished(true);
-      console.log("your final time: " + time);
-      setFinalTime(time);
     }
   };
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div>
-      <span>
+    <div className="flex flex-col items-center gap-4 p-4 space-y-4">
+      <span className="text-lg font-semibold text-blue-700">
         Question {currentQuestionIndex + 1} of {numberOfQuestions}
       </span>
-      <h2>{currentQuestion.question}</h2>
-      {currentQuestion.answers.map((answer, index) => (
-        <div key={index} onClick={() => handleAnswerClick(index)}>
-          {answer}
-        </div>
-      ))}
+      <h2 className="text-2xl font-bold text-gray-700">
+        {currentQuestion.question}
+      </h2>
+      <div className="flex flex-col items-center w-full gap-1 space-y-4">
+        {currentQuestion.answers.map((answer, index) => (
+          <button
+            key={index}
+            onClick={() => handleAnswerClick(index)}
+            className="w-64 px-6 py-2 text-lg font-medium text-white transition-all duration-300 ease-in-out bg-blue-400 border border-blue-500 rounded-xl hover:bg-blue-500 active:bg-blue-500"
+          >
+            {answer}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
