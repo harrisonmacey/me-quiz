@@ -13,29 +13,38 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
   const questions = [
     {
       question: "How many days are in a week?",
-      answers: ["Correct", "Answer 2", "Answer 3", "Answer 4"],
-      correctAnswer: 0,
+      answers: ["4", "5", "6", "7"],
+      correctAnswer: 3,
     },
     {
-      question: "Who is the current president of the United States?",
-      answers: ["Correct", "Answer 6", "Answer 7", "Answer 8"],
-      correctAnswer: 0,
+      question: "Who is the current president of the United States (2023)?",
+      answers: [
+        "Joe Biden",
+        "Donald Trump ",
+        "Barack Obama",
+        "Hillary Clinton",
+      ],
+      correctAnswer: 1,
     },
     {
       question: "What is the capital of the United States?",
-      answers: ["Correct", "Answer 10", "Answer 11", "Answer 12"],
-      correctAnswer: 0,
+      answers: ["Miami", "Washington, DC", "New York", "Los Angeles"],
+      correctAnswer: 2,
     },
     {
-      question:
-        "JavaScript is a programming language. How many days are in a week?",
-      answers: ["Correct", "Answer 14", "Answer 15", "Answer 16"],
+      question: "Which is the oldest planet in our solar system?",
+      answers: ["Jupiter", "Earth", "Saturn", "Pluto"],
       correctAnswer: 0,
     },
     {
       question: "Who established the theory of relativity?",
-      answers: ["Correct", "Answer 18", "Answer 19", "Answer 20"],
-      correctAnswer: 0,
+      answers: [
+        "Pythagoras",
+        "Isaac Newton",
+        "Albert Einstein",
+        "Benjamin Franklin",
+      ],
+      correctAnswer: 2,
     },
   ];
 
