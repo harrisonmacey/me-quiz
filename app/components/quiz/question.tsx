@@ -24,12 +24,12 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
         "Barack Obama",
         "Hillary Clinton",
       ],
-      correctAnswer: 1,
+      correctAnswer: 0,
     },
     {
       question: "What is the capital of the United States?",
       answers: ["Miami", "Washington, DC", "New York", "Los Angeles"],
-      correctAnswer: 2,
+      correctAnswer: 1,
     },
     {
       question: "Which is the oldest planet in our solar system?",
