@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import * as he from "he";
 
 let userAnswers: number[] = [];
 
@@ -9,6 +11,16 @@ type QuestionProps = {
   setScore: (score: number) => void;
   setFinished: (finished: boolean) => void;
 };
+
+interface QuizQuestion {
+  category: string;
+  type: string;
+  difficulty: string;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
+}
+
 const Question = ({ score, setScore, setFinished }: QuestionProps) => {
   const questions = [
     {
@@ -50,7 +62,34 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  const [questionsState, setquestionsState] = useState<QuizQuestion[]>([]);
+
   const numberOfQuestions = questions.length;
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(
+          "https://opentdb.com/api.php?amount=5"
+        );
+        if (response.data.results && response.data.results.length > 0) {
+          const decodedQuestions = response.data.results.map(
+            (question: QuizQuestion) => ({
+              ...question,
+              question: he.decode(question.question),
+            })
+          );
+          setquestionsState(decodedQuestions);
+        } else {
+          console.error("No questions found in API response.");
+        }
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   const handleAnswerClick = (selectedAnswerIndex: number) => {
     // Store their answer
@@ -72,6 +111,8 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
   };
 
   const currentQuestion = questions[currentQuestionIndex];
+  let currentQuestion2: QuizQuestion;
+  currentQuestion2 = questionsState[currentQuestionIndex];
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 space-y-4">
@@ -80,8 +121,11 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
       </span>
       <h2 className="text-2xl font-bold text-gray-700">
         {currentQuestion.question}
+        <div></div>
+        {/* {currentQuestion2.question} */}
       </h2>
       <div className="flex flex-col items-center w-full gap-1 space-y-4">
+        {/* {currentQuestion.incorrect_answers.map((answer, index) => ( */}
         {currentQuestion.answers.map((answer, index) => (
           <button
             key={index}
