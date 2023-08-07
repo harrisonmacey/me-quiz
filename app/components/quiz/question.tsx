@@ -68,13 +68,17 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
 
   const handleAnswerClick = (selectedAnswerIndex: number) => {
     // Store their answer
+    console.log("SELECTED: " + selectedAnswerIndex);
     userAnswers.push(selectedAnswerIndex);
 
     // Set their score
-    // if (selectedAnswerIndex === correctAnswerIndex) {
-    //   const newScore = score + 1;
-    //   setScore(newScore);
-    // }
+    let correctAnswerIndex = currentQuestion.all_answers.indexOf(
+      currentQuestion.correct_answer
+    );
+    if (selectedAnswerIndex === correctAnswerIndex) {
+      const newScore = score + 1;
+      setScore(newScore);
+    }
 
     // Check if they are done
     if (currentQuestionIndex < numberOfQuestions - 1) {
