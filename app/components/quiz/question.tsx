@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import * as he from "he";
+import shuffleArray from "@/helpers/shuffle-array";
 
 let userAnswers: number[] = [];
 
@@ -9,55 +12,70 @@ type QuestionProps = {
   setScore: (score: number) => void;
   setFinished: (finished: boolean) => void;
 };
+
+interface QuizQuestion {
+  category: string;
+  type: string;
+  difficulty: string;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
+  all_answers: string[];
+}
+
 const Question = ({ score, setScore, setFinished }: QuestionProps) => {
-  const questions = [
-    {
-      question: "How many days are in a week?",
-      answers: ["4", "5", "6", "7"],
-      correctAnswer: 3,
-    },
-    {
-      question: "Who is the current president of the United States (2023)?",
-      answers: [
-        "Joe Biden",
-        "Donald Trump ",
-        "Barack Obama",
-        "Hillary Clinton",
-      ],
-      correctAnswer: 0,
-    },
-    {
-      question: "What is the capital of the United States?",
-      answers: ["Miami", "Washington, DC", "New York", "Los Angeles"],
-      correctAnswer: 1,
-    },
-    {
-      question: "Which is the oldest planet in our solar system?",
-      answers: ["Jupiter", "Earth", "Saturn", "Pluto"],
-      correctAnswer: 0,
-    },
-    {
-      question: "Who established the theory of relativity?",
-      answers: [
-        "Pythagoras",
-        "Isaac Newton",
-        "Albert Einstein",
-        "Benjamin Franklin",
-      ],
-      correctAnswer: 2,
-    },
-  ];
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
+  const numberOfQuestions = 5;
 
-  const numberOfQuestions = questions.length;
+  useEffect(() => {
+    // Put this in helper folder to keep this clean
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(
+          `https://opentdb.com/api.php?amount=${numberOfQuestions}&type=multiple`
+        );
+        if (response.data.results && response.data.results.length > 0) {
+          const decodedQuestions = response.data.results.map(
+            (question: QuizQuestion) => ({
+              ...question,
+              question: he.decode(question.question),
+            })
+          );
+
+          // Add all answers to each question and shuffle them
+          decodedQuestions.forEach((question: QuizQuestion) => {
+            // set all_ansers to decoded incorrect answers
+            let all_answers = question.incorrect_answers.map((answer) =>
+              he.decode(answer)
+            );
+            all_answers.push(he.decode(question.correct_answer));
+
+            question.all_answers = shuffleArray(all_answers);
+          });
+
+          setQuizQuestions(decodedQuestions);
+        } else {
+          console.error("No questions found in API response.");
+        }
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   const handleAnswerClick = (selectedAnswerIndex: number) => {
     // Store their answer
+    console.log("SELECTED: " + selectedAnswerIndex);
     userAnswers.push(selectedAnswerIndex);
 
     // Set their score
-    if (selectedAnswerIndex === questions[currentQuestionIndex].correctAnswer) {
+    let correctAnswerIndex = currentQuestion.all_answers.indexOf(
+      currentQuestion.correct_answer
+    );
+    if (selectedAnswerIndex === correctAnswerIndex) {
       const newScore = score + 1;
       setScore(newScore);
     }
@@ -71,7 +89,10 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
     }
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // If there are no questions, show a loading message
+  let currentQuestion: QuizQuestion = quizQuestions[currentQuestionIndex];
+  if (!currentQuestion) return <h1 className="text-2xl">Loading...</h1>;
+  console.log(currentQuestion.correct_answer);
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 space-y-4">
@@ -82,7 +103,7 @@ const Question = ({ score, setScore, setFinished }: QuestionProps) => {
         {currentQuestion.question}
       </h2>
       <div className="flex flex-col items-center w-full gap-1 space-y-4">
-        {currentQuestion.answers.map((answer, index) => (
+        {currentQuestion.all_answers.map((answer, index) => (
           <button
             key={index}
             onClick={() => handleAnswerClick(index)}
